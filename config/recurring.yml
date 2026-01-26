@@ -13,7 +13,7 @@ production:
   process_checkins:
     class: "ProcessCheckinsJob"
     queue: default
-    schedule: every 60 minutes
+    schedule: every <%= ENV.fetch("PROCESS_CHECKINS_INTERVAL_MINUTES", 60) %> minutes
   cleanup_expired_tokens:
     class: "CleanupExpiredTokensJob"
     queue: default

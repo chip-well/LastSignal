@@ -159,8 +159,6 @@ class User < ApplicationRecord
       state: :active,
       last_checkin_confirmed_at: Time.current,
       next_checkin_at: Time.current + effective_checkin_interval_hours.hours,
-      checkin_reminder_sent_at: nil,
-      grace_warning_sent_at: nil,
       cooldown_warning_sent_at: nil,
       delivery_notice_sent_at: nil,
       delivered_at: nil,
@@ -298,7 +296,6 @@ class User < ApplicationRecord
 
     update_columns(
       next_checkin_at: base_time + effective_checkin_interval_hours.hours,
-      checkin_reminder_sent_at: nil,
       checkin_attempts_sent: 0,
       last_checkin_attempt_at: nil
     )

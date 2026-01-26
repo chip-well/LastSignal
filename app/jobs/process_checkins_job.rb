@@ -172,8 +172,6 @@ class ProcessCheckinsJob < ApplicationJob
       state: new_state,
       last_checkin_attempt_at: now,
       checkin_attempts_sent: attempt_number,
-      checkin_reminder_sent_at: (attempt_number == 1 ? now : user.checkin_reminder_sent_at),
-      grace_warning_sent_at: (attempt_number > 1 && attempt_number < attempt_total ? now : user.grace_warning_sent_at),
       cooldown_warning_sent_at: (entering_cooldown && user.cooldown_warning_sent_at.nil? ? now : user.cooldown_warning_sent_at)
     )
 

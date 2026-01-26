@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_25_085144) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_26_155019) do
   create_table "audit_logs", force: :cascade do |t|
     t.bigint "user_id"
     t.string "actor_type", null: false
@@ -135,8 +135,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_25_085144) do
     t.string "checkin_token_digest"
     t.string "recovery_code_digest"
     t.datetime "recovery_code_viewed_at"
-    t.datetime "checkin_reminder_sent_at"
-    t.datetime "grace_warning_sent_at"
     t.datetime "cooldown_warning_sent_at"
     t.datetime "delivery_notice_sent_at"
     t.integer "checkin_attempts"
