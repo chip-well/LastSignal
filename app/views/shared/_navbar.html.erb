@@ -2,7 +2,8 @@
   <div class="container mx-auto px-4">
     <div class="flex justify-between h-16">
       <div class="flex items-center">
-        <%= link_to dashboard_path, class: "flex items-center" do %>
+        <%= link_to dashboard_path, class: "flex items-center gap-2" do %>
+          <%= image_tag "/logo-mark.svg", class: "w-8 h-8", alt: "LastSignal logo" %>
           <span class="text-xl font-bold text-gray-900">LastSignal</span>
         <% end %>
 
