@@ -147,7 +147,8 @@ class MessagesController < ApplicationController
         recipient_id: env["recipient_id"].to_i,
         encrypted_msg_key_b64u: env["encrypted_msg_key_b64u"],
         envelope_algo: env["envelope_algo"] || "crypto_box_seal",
-        envelope_version: env["envelope_version"] || 1
+        envelope_version: env["envelope_version"] || 1,
+        delivery_delay_hours: (env["delivery_delay_days"].to_i * 24)
       }
     end
   end

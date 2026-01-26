@@ -31,6 +31,14 @@
       margin: 20px 0;
       font-size: 14px;
     }
+    .info {
+      background-color: #eff6ff;
+      border: 1px solid #3b82f6;
+      border-radius: 6px;
+      padding: 12px;
+      margin: 20px 0;
+      font-size: 14px;
+    }
     .footer {
       margin-top: 30px;
       padding-top: 20px;
@@ -41,22 +49,42 @@
   </style>
 </head>
 <body>
-  <h1>You have <%= @messages_count %> message<%= 's' if @messages_count > 1 %> waiting</h1>
+  <h1>You have <%= @total_count %> message<%= 's' if @total_count > 1 %> waiting</h1>
 
   <p>
-    <strong><%= @sender.email %></strong> prepared encrypted message<%= 's' if @messages_count > 1 %> for you on <%= @app_name %>. 
-    These message<%= 's' if @messages_count > 1 %> <%= @messages_count > 1 ? 'have' : 'has' %> now been delivered.
+    <strong><%= @sender.email %></strong> prepared encrypted message<%= 's' if @total_count > 1 %> for you on <%= @app_name %>. 
+    <% if @available_count > 0 && @delayed_message_recipients.any? %>
+      <%= @available_count %> message<%= 's' if @available_count > 1 %> <%= @available_count > 1 ? 'are' : 'is' %> available now, and <%= @delayed_message_recipients.count %> will become available later.
+    <% elsif @available_count > 0 %>
+      <%= @available_count > 1 ? 'These messages are' : 'This message is' %> now available.
+    <% else %>
+      <%= @delayed_message_recipients.count > 1 ? 'These messages have' : 'This message has' %> a delayed delivery and will become available later.
+    <% end %>
   </p>
 
   <p>
-    <a href="<%= @delivery_url %>" class="button" style="color: #ffffff !important;">Read Your Message<%= 's' if @messages_count > 1 %></a>
+    <a href="<%= @delivery_url %>" class="button" style="color: #ffffff !important;"><%= @available_count > 0 ? "Read Your Message#{'s' if @available_count > 1}" : "View Details" %></a>
   </p>
+
+  <% if @delayed_message_recipients.any? %>
+    <div class="info">
+      <strong>Messages with delayed delivery</strong>
+      <p style="margin: 8px 0 0 0;">
+        The following message<%= 's' if @delayed_message_recipients.count > 1 %> will become available on the dates shown:
+      </p>
+      <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+        <% @delayed_message_recipients.each do |mr| %>
+          <li><strong><%= mr.message.label.presence || "Untitled message" %></strong> &mdash; <%= mr.available_at.strftime("%B %d, %Y") %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
   <div class="notice">
     <strong>You'll need your passphrase</strong>
     <p style="margin: 8px 0 0 0;">
-      To decrypt and read <%= @messages_count > 1 ? 'these messages' : 'this message' %>, you'll need to enter the passphrase 
-      you created when you first set up your account. If you've forgotten your passphrase, the message<%= 's' if @messages_count > 1 %> 
+      To decrypt and read <%= @total_count > 1 ? 'these messages' : 'this message' %>, you'll need to enter the passphrase 
+      you created when you first set up your account. If you've forgotten your passphrase, the message<%= 's' if @total_count > 1 %> 
       cannot be recovered.
     </p>
   </div>
@@ -64,7 +92,7 @@
   <div class="footer">
     <p>This is an automated message from <%= @app_name %>. Please do not reply to this email.</p>
     <p>
-      This link will remain active so you can access your message<%= 's' if @messages_count > 1 %> at any time.
+      This link will remain active so you can access your message<%= 's' if @total_count > 1 %> at any time.
     </p>
   </div>
 </body>

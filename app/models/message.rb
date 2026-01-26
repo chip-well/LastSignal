@@ -32,7 +32,8 @@ class Message < ApplicationRecord
           recipient_id: envelope[:recipient_id],
           encrypted_msg_key_b64u: envelope[:encrypted_msg_key_b64u],
           envelope_algo: envelope[:envelope_algo] || "crypto_box_seal",
-          envelope_version: envelope[:envelope_version] || 1
+          envelope_version: envelope[:envelope_version] || 1,
+          delivery_delay_hours: envelope[:delivery_delay_hours] || 0
         )
       end
 
@@ -61,7 +62,8 @@ class Message < ApplicationRecord
           recipient_id: envelope[:recipient_id],
           encrypted_msg_key_b64u: envelope[:encrypted_msg_key_b64u],
           envelope_algo: envelope[:envelope_algo] || "crypto_box_seal",
-          envelope_version: envelope[:envelope_version] || 1
+          envelope_version: envelope[:envelope_version] || 1,
+          delivery_delay_hours: envelope[:delivery_delay_hours] || 0
         )
       end
 

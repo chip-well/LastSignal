@@ -148,5 +148,10 @@ module AppConfig
     def trusted_contact_token_ttl_hours
       AppDefaults::TRUSTED_CONTACT_TOKEN_TTL_HOURS
     end
+
+    # Message recipient delivery delay
+    def message_recipient_max_delivery_delay_days
+      AppDefaults::MESSAGE_RECIPIENT_MAX_DELIVERY_DELAY_DAYS
+    end
   end
 end

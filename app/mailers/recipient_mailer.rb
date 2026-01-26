@@ -14,16 +14,18 @@ class RecipientMailer < ApplicationMailer
     )
   end
 
-  def delivery(recipient, raw_token, messages_count)
+  def delivery(recipient, raw_token, available_count, delayed_message_recipients = [])
     @recipient = recipient
     @sender = recipient.user
     @delivery_url = delivery_url(token: raw_token)
-    @messages_count = messages_count
+    @available_count = available_count
+    @delayed_message_recipients = delayed_message_recipients
+    @total_count = available_count + delayed_message_recipients.count
     @app_name = AppConfig.smtp_from_name
 
     mail(
       to: recipient.email,
-      subject: "You have #{messages_count} message#{'s' if messages_count > 1} waiting on #{@app_name}"
+      subject: "You have #{@total_count} message#{'s' if @total_count > 1} waiting on #{@app_name}"
     )
   end
 

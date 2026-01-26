@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_26_155019) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_26_202434) do
   create_table "audit_logs", force: :cascade do |t|
     t.bigint "user_id"
     t.string "actor_type", null: false
@@ -61,6 +61,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_26_155019) do
     t.integer "envelope_version", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "delivery_delay_hours", default: 0, null: false
     t.index ["message_id", "recipient_id"], name: "index_message_recipients_on_message_id_and_recipient_id", unique: true
     t.index ["message_id"], name: "index_message_recipients_on_message_id"
     t.index ["recipient_id"], name: "index_message_recipients_on_recipient_id"

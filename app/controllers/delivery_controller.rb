@@ -21,7 +21,15 @@ class DeliveryController < ApplicationController
 
     @recipient = @delivery_token.recipient
     @sender = @recipient.user
-    @messages = @recipient.messages.where(user: @sender)
+
+    # Get message recipients with their availability status
+    @message_recipients = @recipient.message_recipients
+      .joins(:message)
+      .where(messages: { user_id: @sender.id })
+      .includes(:message)
+
+    @available_message_recipients = @message_recipients.select(&:available?)
+    @pending_message_recipients = @message_recipients.reject(&:available?)
 
     # Record access
     @delivery_token.record_access!
@@ -30,7 +38,11 @@ class DeliveryController < ApplicationController
       action: "delivery_link_opened",
       user: @sender,
       actor_type: "recipient",
-      metadata: { recipient_id: @recipient.id, messages_count: @messages.count },
+      metadata: {
+        recipient_id: @recipient.id,
+        available_count: @available_message_recipients.count,
+        pending_count: @pending_message_recipients.count
+      },
       request: request
     )
   end
@@ -53,10 +65,17 @@ class DeliveryController < ApplicationController
 
     recipient = delivery_token.recipient
     sender = recipient.user
-    messages = recipient.messages.where(user: sender)
 
-    # Build payload for all messages
-    payloads = messages.map do |message|
+    # Get only available message recipients
+    available_mrs = recipient.message_recipients
+      .joins(:message)
+      .where(messages: { user_id: sender.id })
+      .includes(:message)
+      .select(&:available?)
+
+    # Build payload for available messages only
+    payloads = available_mrs.map do |mr|
+      message = mr.message
       payload = message.delivery_payload_for(recipient)
       next nil unless payload
 

@@ -69,6 +69,10 @@
         const recipientId = checkbox.value;
         const publicKeyB64u = checkbox.dataset.publicKey;
         
+        // Get delay days for this recipient
+        const delayInput = document.querySelector(`input.recipient-delay[data-recipient-id="${recipientId}"]`);
+        const delayDays = parseInt(delayInput?.value || 0, 10) || 0;
+        
         // Decode recipient's public key
         const publicKey = sodium.from_base64(publicKeyB64u, sodium.base64_variants.URLSAFE_NO_PADDING);
         
@@ -80,7 +84,8 @@
           recipient_id: recipientId,
           encrypted_msg_key_b64u: encryptedMsgKeyB64u,
           envelope_algo: 'crypto_box_seal',
-          envelope_version: 1
+          envelope_version: 1,
+          delivery_delay_days: delayDays
         });
       }
 

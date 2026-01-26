@@ -30,7 +30,7 @@ RSpec.describe DeliverMessagesJob, type: :job do
       end
 
       it "includes message count in email" do
-        expect(RecipientMailer).to receive(:delivery).with(recipient, anything, 1).and_call_original
+        expect(RecipientMailer).to receive(:delivery).with(recipient, anything, 1, []).and_call_original
         DeliverMessagesJob.new.perform(user.id)
       end
     end

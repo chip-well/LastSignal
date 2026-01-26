@@ -14,23 +14,34 @@ class DeliverMessagesJob < ApplicationJob
     recipients_with_messages = user.recipients.with_keys.includes(:messages)
 
     recipients_with_messages.find_each do |recipient|
-      messages = recipient.messages.where(user: user)
-      next if messages.empty?
+      message_recipients = recipient.message_recipients
+        .joins(:message)
+        .where(messages: { user_id: user.id })
+        .includes(:message)
+
+      next if message_recipients.empty?
+
+      available_count = message_recipients.count(&:available?)
+      delayed_mrs = message_recipients.reject(&:available?)
 
       # Generate delivery token
       delivery_token, raw_token = DeliveryToken.generate_for(recipient)
 
-      # Send delivery email
-      RecipientMailer.delivery(recipient, raw_token, messages.count).deliver_later
+      # Send delivery email with delay info
+      RecipientMailer.delivery(recipient, raw_token, available_count, delayed_mrs).deliver_later
 
       safe_audit_log(
         action: "recipient_delivery_sent",
         user: user,
         actor_type: "system",
-        metadata: { recipient_id: recipient.id, messages_count: messages.count }
+        metadata: {
+          recipient_id: recipient.id,
+          available_count: available_count,
+          delayed_count: delayed_mrs.count
+        }
       )
 
-      Rails.logger.info "[DeliverMessagesJob] Sent delivery email to recipient #{recipient.id} with #{messages.count} messages"
+      Rails.logger.info "[DeliverMessagesJob] Sent delivery email to recipient #{recipient.id} with #{available_count} available, #{delayed_mrs.count} delayed messages"
     end
   end
 

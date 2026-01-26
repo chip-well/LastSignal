@@ -1,18 +1,35 @@
-You have <%= @messages_count %> message<%= 's' if @messages_count > 1 %> waiting on <%= @app_name %>
+You have <%= @total_count %> message<%= 's' if @total_count > 1 %> waiting on <%= @app_name %>
 <%= "=" * 50 %>
 
-<%= @sender.email %> prepared encrypted message<%= 's' if @messages_count > 1 %> for you on <%= @app_name %>. These message<%= 's' if @messages_count > 1 %> <%= @messages_count > 1 ? 'have' : 'has' %> now been delivered.
+<%= @sender.email %> prepared encrypted message<%= 's' if @total_count > 1 %> for you on <%= @app_name %>.
+<% if @available_count > 0 && @delayed_message_recipients.any? -%>
+<%= @available_count %> message<%= 's' if @available_count > 1 %> <%= @available_count > 1 ? 'are' : 'is' %> available now, and <%= @delayed_message_recipients.count %> will become available later.
+<% elsif @available_count > 0 -%>
+<%= @available_count > 1 ? 'These messages are' : 'This message is' %> now available.
+<% else -%>
+<%= @delayed_message_recipients.count > 1 ? 'These messages have' : 'This message has' %> a delayed delivery and will become available later.
+<% end -%>
 
-Read your message<%= 's' if @messages_count > 1 %> here:
+<%= @available_count > 0 ? "Read your message#{'s' if @available_count > 1}" : "View details" %> here:
 <%= @delivery_url %>
+<% if @delayed_message_recipients.any? %>
+
+---
+
+MESSAGES WITH DELAYED DELIVERY
+The following message<%= 's' if @delayed_message_recipients.count > 1 %> will become available on the dates shown:
+<% @delayed_message_recipients.each do |mr| %>
+- <%= mr.message.label.presence || "Untitled message" %> — <%= mr.available_at.strftime("%B %d, %Y") %>
+<% end %>
+<% end %>
 
 ---
 
 YOU'LL NEED YOUR PASSPHRASE
-To decrypt and read <%= @messages_count > 1 ? 'these messages' : 'this message' %>, you'll need to enter the passphrase you created when you first set up your account. If you've forgotten your passphrase, the message<%= 's' if @messages_count > 1 %> cannot be recovered.
+To decrypt and read <%= @total_count > 1 ? 'these messages' : 'this message' %>, you'll need to enter the passphrase you created when you first set up your account. If you've forgotten your passphrase, the message<%= 's' if @total_count > 1 %> cannot be recovered.
 
 ---
 
 This is an automated message from <%= @app_name %>. Please do not reply to this email.
 
-This link will remain active so you can access your message<%= 's' if @messages_count > 1 %> at any time.
+This link will remain active so you can access your message<%= 's' if @total_count > 1 %> at any time.
