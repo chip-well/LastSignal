@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   # ============================================================================
   # Recipients (authenticated)
   # ============================================================================
-  resources :recipients, only: [:index, :new, :create, :show, :destroy] do
+  resources :recipients, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
     member do
       post :resend_invite
     end

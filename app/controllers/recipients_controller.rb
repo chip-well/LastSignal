@@ -3,7 +3,7 @@
 class RecipientsController < ApplicationController
   before_action :require_authentication
   before_action :prevent_delivered_actions, only: [:new, :create, :destroy, :resend_invite]
-  before_action :set_recipient, only: [:show, :destroy, :resend_invite]
+  before_action :set_recipient, only: [:show, :edit, :update, :destroy, :resend_invite]
 
   # GET /recipients
   def index
@@ -49,6 +49,21 @@ class RecipientsController < ApplicationController
 
   # GET /recipients/:id
   def show
+  end
+
+  # GET /recipients/:id/edit
+  def edit
+  end
+
+  # PATCH/PUT /recipients/:id
+  def update
+    if @recipient.update(recipient_params)
+      flash[:notice] = "Recipient updated."
+      redirect_to recipients_path
+    else
+      flash.now[:alert] = "Please correct the errors below."
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   # DELETE /recipients/:id
