@@ -32,7 +32,7 @@ Website: [lastsignal.app](https://lastsignal.app)
 
 ## ⏱️ Default Timing (Days)
 
-Defaults:
+All timing settings are configurable per user in Account Settings.
 
 | Setting | Default |
 | --- | --- |
