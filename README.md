@@ -1,5 +1,7 @@
 # <img src="https://lastsignal.app/logo-mark.svg" alt="LastSignal" width="50" height="50" align="absmiddle" /> LastSignal
 
+[![Ruby](https://img.shields.io/badge/Ruby-3.4-red.svg)](https://www.ruby-lang.org/) [![Rails](https://img.shields.io/badge/Rails-8-red.svg)](https://rubyonrails.org/) [![Database](https://img.shields.io/badge/Database-SQLite-blue.svg)](https://www.sqlite.org/) [![Crypto](https://img.shields.io/badge/Crypto-libsodium-black.svg)](https://libsodium.gitbook.io/doc/) [![Deploy](https://img.shields.io/badge/Deploy-Kamal-success.svg)](https://kamal-deploy.org/) [![License: BSL 1.1](https://img.shields.io/badge/License-BSL%201.1-blue.svg)](https://mariadb.com/bsl11/)
+
 LastSignal is a self-hosted, email-first dead man's switch. You write encrypted messages for the people you care about. If you stop responding to email check-ins, LastSignal delivers those messages automatically.
 
 Website: [lastsignal.app](https://lastsignal.app)
@@ -10,16 +12,6 @@ Website: [lastsignal.app](https://lastsignal.app)
 2) If you miss them, you receive reminder attempts at a fixed interval.
 3) The final reminder triggers the trusted contact ping (if configured).
 4) If you still don't respond, messages are delivered by email.
-
-## 🛠️ Tech Stack
-
-- **Backend**: Rails 8 (Ruby 3.4)
-- **Database**: SQLite (single-file, no external DB needed)
-- **Background Jobs**: Solid Queue (built into Rails 8)
-- **Caching**: Solid Cache (built into Rails 8)
-- **Crypto**: libsodium (XChaCha20-Poly1305, Argon2id, X25519)
-- **Frontend**: Vanilla JS + Tailwind CSS (no build step required)
-- **Deployment**: Kamal (Docker-based, zero-downtime)
 
 ## 🔒 Security Model
 
@@ -169,6 +161,8 @@ Health check: `https://YOUR_DOMAIN/up`
 
 Email delivery is mission-critical for LastSignal. If your SMTP setup is misconfigured, messages may never arrive.
 
+Most transactional email providers (such as Postmark, SendGrid, or similar services) guide you through this process and provide the required DNS records and configuration details.
+
 - **SPF**: authorize your SMTP provider to send on your domain
 - **DKIM**: enable DKIM signing and add the DNS record
 - **DMARC**: start with `p=none`, then tighten to `quarantine` or `reject`
@@ -213,3 +207,13 @@ LastSignal is provided "as is" without warranty of any kind. The authors provide
 By using this project, you accept full responsibility for configuration, security, backups, content, recipients, compliance obligations, and the consequences of any delivery or non-delivery. The authors disclaim all liability for damages, data loss, missed or premature delivery, misuse, or any other outcome, whether arising from bugs, misconfiguration, third-party outages, or operational errors.
 
 LastSignal is not a substitute for a will, trust, power of attorney, or any other legal instrument. It is not legally binding and should not be relied upon to transfer rights, property, or obligations. If you need legal certainty, consult a qualified attorney and use appropriate legal documents.
+
+
+## 🧡 Donate
+
+If you find **LastSignal** useful and want to support its development, you can donate via ₿itcoin:
+
+`bc1qt6z0e5ttcjx0cnwjdl8mua2srt0lamah5lnnvm`
+
+Donations help support ongoing maintenance, security reviews, and long-term sustainability of the project. 
+Thank you 🙏
