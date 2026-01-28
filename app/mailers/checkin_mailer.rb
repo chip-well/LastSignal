@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class CheckinMailer < ApplicationMailer
-  def reminder(user, raw_token)
+  def reminder(user, raw_token, attempt_number:, attempt_total:)
     @user = user
     @checkin_url = confirm_checkin_url(token: raw_token)
     @next_checkin_at = user.next_checkin_at
-    @attempt_number = user.checkin_attempts_sent
-    @attempt_total = user.effective_checkin_attempts
+    @attempt_number = attempt_number
+    @attempt_total = attempt_total
     @next_attempt_at = user.next_attempt_due_at
     @app_name = AppConfig.smtp_from_name
 
@@ -16,10 +16,10 @@ class CheckinMailer < ApplicationMailer
     )
   end
 
-  def grace_period_warning(user, raw_token)
+  def grace_period_warning(user, raw_token, attempt_number:, attempt_total:)
     @user = user
-    @attempt_number = user.checkin_attempts_sent
-    @attempt_total = user.effective_checkin_attempts
+    @attempt_number = attempt_number
+    @attempt_total = attempt_total
     @next_attempt_at = user.next_attempt_due_at
     @checkin_url = confirm_checkin_url(token: raw_token)
     @login_url = login_url
@@ -31,11 +31,11 @@ class CheckinMailer < ApplicationMailer
     )
   end
 
-  def cooldown_warning(user, raw_token)
+  def cooldown_warning(user, raw_token, attempt_number:, attempt_total:)
     @user = user
     @checkin_url = confirm_checkin_url(token: raw_token)
-    @attempt_number = user.checkin_attempts_sent
-    @attempt_total = user.effective_checkin_attempts
+    @attempt_number = attempt_number
+    @attempt_total = attempt_total
     @delivery_due_at = user.delivery_due_at
     @app_name = AppConfig.smtp_from_name
 

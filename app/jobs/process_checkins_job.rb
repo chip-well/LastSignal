@@ -179,11 +179,11 @@ class ProcessCheckinsJob < ApplicationJob
 
     raw_token = generate_checkin_token(user)
     if attempt_number >= attempt_total
-      CheckinMailer.cooldown_warning(user, raw_token).deliver_later
+      CheckinMailer.cooldown_warning(user, raw_token, attempt_number:, attempt_total:).deliver_later
     elsif attempt_number == 1
-      CheckinMailer.reminder(user, raw_token).deliver_later
+      CheckinMailer.reminder(user, raw_token, attempt_number:, attempt_total:).deliver_later
     else
-      CheckinMailer.grace_period_warning(user, raw_token).deliver_later
+      CheckinMailer.grace_period_warning(user, raw_token, attempt_number:, attempt_total:).deliver_later
     end
 
     log_attempt_audit(user, attempt_number:, attempt_total:)

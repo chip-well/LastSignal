@@ -6,7 +6,7 @@ RSpec.describe CheckinMailer, type: :mailer do
   describe "#reminder" do
     let(:user) { create(:user, email: "test@example.com", next_checkin_at: 1.day.from_now) }
     let(:raw_token) { SecureRandom.urlsafe_base64(32) }
-    let(:mail) { described_class.reminder(user, raw_token) }
+    let(:mail) { described_class.reminder(user, raw_token, attempt_number: 1, attempt_total: 3) }
 
     it "sends to user email" do
       expect(mail.to).to eq(["test@example.com"])
@@ -24,7 +24,7 @@ RSpec.describe CheckinMailer, type: :mailer do
   describe "#grace_period_warning" do
     let(:user) { create(:user, :in_grace, email: "test@example.com") }
     let(:raw_token) { SecureRandom.urlsafe_base64(32) }
-    let(:mail) { described_class.grace_period_warning(user, raw_token) }
+    let(:mail) { described_class.grace_period_warning(user, raw_token, attempt_number: 2, attempt_total: 3) }
 
     it "sends to user email" do
       expect(mail.to).to eq(["test@example.com"])
@@ -42,7 +42,7 @@ RSpec.describe CheckinMailer, type: :mailer do
   describe "#cooldown_warning" do
     let(:user) { create(:user, :in_cooldown, email: "test@example.com") }
     let(:raw_token) { SecureRandom.urlsafe_base64(32) }
-    let(:mail) { described_class.cooldown_warning(user, raw_token) }
+    let(:mail) { described_class.cooldown_warning(user, raw_token, attempt_number: 3, attempt_total: 3) }
 
     it "sends to user email" do
       expect(mail.to).to eq(["test@example.com"])

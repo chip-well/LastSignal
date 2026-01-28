@@ -32,7 +32,7 @@ RSpec.describe ProcessCheckinsJob, type: :job do
     it "sends a reminder for due check-ins and stays in active state" do
       expect {
         ProcessCheckinsJob.new.perform
-      }.to have_enqueued_mail(CheckinMailer, :reminder).with(user_due, anything)
+      }.to have_enqueued_mail(CheckinMailer, :reminder).with(user_due, anything, a_hash_including(attempt_number: 1, attempt_total: 3))
 
       expect(user_due.reload.state).to eq("active")
       expect(user_due.checkin_attempts_sent).to eq(1)
@@ -41,7 +41,7 @@ RSpec.describe ProcessCheckinsJob, type: :job do
     it "does not send reminders for future check-ins" do
       expect {
         ProcessCheckinsJob.new.perform
-      }.not_to have_enqueued_mail(CheckinMailer, :reminder).with(user_future, anything)
+      }.not_to have_enqueued_mail(CheckinMailer, :reminder).with(user_future, anything, anything)
     end
   end
 
@@ -68,7 +68,7 @@ RSpec.describe ProcessCheckinsJob, type: :job do
     it "sends second reminder and transitions to grace" do
       expect {
         ProcessCheckinsJob.new.perform
-      }.to have_enqueued_mail(CheckinMailer, :grace_period_warning).with(user_active_due, anything)
+      }.to have_enqueued_mail(CheckinMailer, :grace_period_warning).with(user_active_due, anything, a_hash_including(attempt_number: 2, attempt_total: 3))
 
       user_active_due.reload
       expect(user_active_due.state).to eq("grace")
@@ -78,7 +78,7 @@ RSpec.describe ProcessCheckinsJob, type: :job do
     it "sends a followup reminder when due" do
       expect {
         ProcessCheckinsJob.new.perform
-      }.to have_enqueued_mail(CheckinMailer, :grace_period_warning).with(user_grace_due, anything)
+      }.to have_enqueued_mail(CheckinMailer, :grace_period_warning).with(user_grace_due, anything, a_hash_including(attempt_number: 2, attempt_total: 3))
 
       expect(user_grace_due.reload.checkin_attempts_sent).to eq(2)
     end
@@ -86,7 +86,7 @@ RSpec.describe ProcessCheckinsJob, type: :job do
     it "does not send followup reminders before interval" do
       expect {
         ProcessCheckinsJob.new.perform
-      }.not_to have_enqueued_mail(CheckinMailer, :grace_period_warning).with(user_grace_not_due, anything)
+      }.not_to have_enqueued_mail(CheckinMailer, :grace_period_warning).with(user_grace_not_due, anything, anything)
     end
 
     it "does not send more attempts after max is reached" do
@@ -104,7 +104,7 @@ RSpec.describe ProcessCheckinsJob, type: :job do
 
       expect {
         ProcessCheckinsJob.new.perform
-      }.not_to have_enqueued_mail(CheckinMailer, :cooldown_warning).with(user_max_attempts, anything)
+      }.not_to have_enqueued_mail(CheckinMailer, :cooldown_warning).with(user_max_attempts, anything, anything)
     end
   end
 
@@ -233,7 +233,7 @@ RSpec.describe ProcessCheckinsJob, type: :job do
       # Should only send first reminder, not jump to delivery
       expect {
         ProcessCheckinsJob.new.perform
-      }.to have_enqueued_mail(CheckinMailer, :reminder).with(user, anything).once
+      }.to have_enqueued_mail(CheckinMailer, :reminder).with(user, anything, a_hash_including(attempt_number: 1, attempt_total: 3)).once
 
       expect(user.reload.state).to eq("active")
       expect(user.checkin_attempts_sent).to eq(1)
@@ -244,7 +244,7 @@ RSpec.describe ProcessCheckinsJob, type: :job do
       # Second run should send second reminder
       expect {
         ProcessCheckinsJob.new.perform
-      }.to have_enqueued_mail(CheckinMailer, :grace_period_warning).with(user, anything).once
+      }.to have_enqueued_mail(CheckinMailer, :grace_period_warning).with(user, anything, a_hash_including(attempt_number: 2, attempt_total: 3)).once
 
       expect(user.reload.state).to eq("grace")
       expect(user.checkin_attempts_sent).to eq(2)
