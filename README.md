@@ -100,6 +100,39 @@ Then open:
 - App: http://localhost:3000
 - Mailhog inbox: http://localhost:8025
 
+### E2EE demo flow (Dev / Docker)
+
+This lets you test the full check-in -> delivery flow quickly, without waiting days.
+
+Prereqs:
+
+1) Start the stack.
+2) Log in, add a recipient, accept the invite with a passphrase, and create a message for that recipient.
+   Check-ins are skipped unless there is at least one message linked to an accepted recipient.
+Dev commands:
+
+```bash
+bin/rails demo:checkins:status EMAIL=you@example.com
+bin/rails demo:checkins:advance EMAIL=you@example.com
+bin/rails demo:checkins:advance_days EMAIL=you@example.com DAYS=7
+```
+
+Docker commands:
+
+```bash
+docker compose -f docker-compose.dev.yml exec app bin/rails demo:checkins:status EMAIL=you@example.com
+docker compose -f docker-compose.dev.yml exec app bin/rails demo:checkins:advance EMAIL=you@example.com
+docker compose -f docker-compose.dev.yml exec app bin/rails demo:checkins:advance_days EMAIL=you@example.com DAYS=7
+```
+
+Notes:
+
+- Each `advance` sends the next email in the sequence (reminder -> grace -> cooldown -> delivery).
+- `advance_days` simulates time passing by N days and runs the check-in job.
+- To skip straight to delivery: `bin/rails demo:checkins:deliver EMAIL=you@example.com`
+- Emails open in letter_opener (Dev) or Mailhog (Docker).
+- Demo helpers only run in development/test.
+
 ### Tests
 
 ```bash

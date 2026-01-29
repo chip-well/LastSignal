@@ -9,7 +9,7 @@
     </p>
 
     <div class="mt-4 bg-indigo-50 border border-indigo-200 rounded-lg p-4 text-sm text-indigo-700">
-      Confirming will extend delivery by <strong><%= @trusted_contact.effective_pause_duration_hours %> hours</strong>.
+      Confirming will extend delivery by <strong><%= (@trusted_contact.effective_pause_duration_hours / 24.0).round %> days</strong>.
       This does not give you access to any messages.
     </div>
 
