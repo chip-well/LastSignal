@@ -40,8 +40,17 @@ Rails.application.configure do
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
-  # Use letter_opener to preview emails in browser (opens automatically)
-  config.action_mailer.delivery_method = :letter_opener
+  # Use SMTP if configured (e.g., Mailhog in Docker), otherwise letter_opener
+  if ENV["SMTP_HOST"].present?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: ENV["SMTP_HOST"],
+      port: ENV.fetch("SMTP_PORT", 1025).to_i
+    }
+  else
+    # letter_opener opens emails in browser automatically
+    config.action_mailer.delivery_method = :letter_opener
+  end
 
   # Deliver emails synchronously in development for easier debugging
   config.active_job.queue_adapter = :inline

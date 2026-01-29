@@ -1,0 +1,32 @@
+# Development stack with Mailhog for email testing
+# Usage: docker compose -f docker-compose.dev.yml up --build
+#
+# App:     http://localhost:3000
+# Mailhog: http://localhost:8025
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=development
+      - APP_BASE_URL=http://localhost:3000
+      - APP_HOST=localhost
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+    depends_on:
+      - mailhog
+    volumes:
+      - app_storage:/rails/storage
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "8025:8025"  # Web UI
+      - "1025:1025"  # SMTP
+
+volumes:
+  app_storage:

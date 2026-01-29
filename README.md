@@ -53,7 +53,7 @@ If the trusted contact confirms on May 16:
 
 **Recipient-specific delay**: You can also set a delay (in days) per recipient. This delays when the recipient can decrypt the message after delivery—useful for staggered access or time-sensitive information.
 
-## 🧪 Development (Quick Trial)
+## 🧪 Development
 
 This runs a local dev stack and opens emails in your browser using [letter_opener](https://github.com/ryanb/letter_opener).
 
@@ -87,7 +87,18 @@ bin/dev
 Then open http://localhost:3000 and request a magic link. 
 The email opens in your browser automatically via `letter_opener`.
 
-**Note**: `letter_opener` does not work inside Docker containers. In that case, check the server logs to retrieve the magic link.
+### Docker (Quick trial with Mailhog)
+
+If you want to try the app without installing Ruby locally, use the dev compose stack with [Mailhog](https://github.com/mailhog/MailHog):
+
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+
+Then open:
+
+- App: http://localhost:3000
+- Mailhog inbox: http://localhost:8025
 
 ### Tests
 
