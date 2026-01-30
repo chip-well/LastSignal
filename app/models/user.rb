@@ -70,23 +70,32 @@ class User < ApplicationRecord
   scope :needing_followup_attempt, -> {
     where(state: [ :active, :grace, :cooldown ])
       .where.not(last_checkin_attempt_at: nil)
-      .where("#{datetime_add_hours_sql("last_checkin_attempt_at", "COALESCE(checkin_attempt_interval_hours, #{AppConfig.checkin_default_attempt_interval_hours})")} <= ?",
-             Time.current)
+      .where(checkin_attempt_due_condition(:last_checkin_attempt_at))
   }
 
   scope :needing_delivery, -> {
     where(state: :cooldown)
       .where.not(cooldown_warning_sent_at: nil)
-      .where("#{datetime_add_hours_sql("cooldown_warning_sent_at", "COALESCE(checkin_attempt_interval_hours, #{AppConfig.checkin_default_attempt_interval_hours})")} <= ?",
-             Time.current)
+      .where(checkin_attempt_due_condition(:cooldown_warning_sent_at))
   }
 
-  def self.datetime_add_hours_sql(column, hours_sql)
+  def self.checkin_attempt_due_condition(column)
     adapter = connection.adapter_name.downcase
+    column_node = arel_table[column]
+    interval_hours = Arel::Nodes::NamedFunction.new(
+      "COALESCE",
+      [ arel_table[:checkin_attempt_interval_hours], AppConfig.checkin_default_attempt_interval_hours ]
+    )
+
     if adapter.include?("sqlite")
-      "datetime(#{column}, '+' || #{hours_sql} || ' hours')"
+      prefix = Arel::Nodes::InfixOperation.new("||", Arel.sql("'+'"), interval_hours)
+      modifier = Arel::Nodes::InfixOperation.new("||", prefix, Arel.sql("' hours'"))
+      Arel::Nodes::NamedFunction.new("datetime", [ column_node, modifier ])
+        .lteq(Time.current)
     else
-      "#{column} + (#{hours_sql} * INTERVAL '1 hour')"
+      interval = Arel::Nodes::InfixOperation.new("*", interval_hours, Arel.sql("INTERVAL '1 hour'"))
+      Arel::Nodes::InfixOperation.new("+", column_node, interval)
+        .lteq(Time.current)
     end
   end
 
