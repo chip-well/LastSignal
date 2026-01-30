@@ -42,5 +42,5 @@ Rails.application.configure do
   end
 
   # Report violations without enforcing the policy.
-  config.content_security_policy_report_only = AppDefaults::CSP_REPORT_ONLY
+  config.content_security_policy_report_only = AppConfig::CSP_REPORT_ONLY
 end

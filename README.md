@@ -115,6 +115,7 @@ Dev commands:
 bin/rails demo:checkins:status EMAIL=you@example.com
 bin/rails demo:checkins:advance EMAIL=you@example.com
 bin/rails demo:checkins:advance_days EMAIL=you@example.com DAYS=7
+bin/rails demo:checkins:deliver EMAIL=you@example.com`
 ```
 
 Docker commands:
@@ -123,6 +124,7 @@ Docker commands:
 docker compose -f docker-compose.dev.yml exec app bin/rails demo:checkins:status EMAIL=you@example.com
 docker compose -f docker-compose.dev.yml exec app bin/rails demo:checkins:advance EMAIL=you@example.com
 docker compose -f docker-compose.dev.yml exec app bin/rails demo:checkins:advance_days EMAIL=you@example.com DAYS=7
+docker compose -f docker-compose.dev.yml exec app bin/rails demo:checkins:deliver EMAIL=you@example.com
 ```
 
 Notes:
@@ -232,7 +234,7 @@ docker run --rm -v lastsignal_storage:/data -v "$PWD":/backup alpine \
 
 ## ⚙️ Defaults
 
-Timing, rate-limit, and crypto defaults live in `config/initializers/app_defaults.rb`.
+Timing, rate-limit, and crypto defaults live in `config/initializers/app_config.rb`.
 
 ## 🤝 Contributing
 

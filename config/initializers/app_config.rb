@@ -4,6 +4,35 @@
 # with sensible defaults for development.
 
 module AppConfig
+  MAGIC_LINK_TTL_MINUTES = 15
+
+  CHECKIN_DEFAULT_INTERVAL_HOURS = 720
+  CHECKIN_DEFAULT_ATTEMPTS = 3
+  CHECKIN_DEFAULT_ATTEMPT_INTERVAL_HOURS = 168
+  CHECKIN_MIN_INTERVAL_HOURS = 24
+  CHECKIN_MIN_ATTEMPTS = 3
+  CHECKIN_MIN_ATTEMPT_INTERVAL_HOURS = 24
+  CHECKIN_MAX_INTERVAL_HOURS = 8_760
+  CHECKIN_MAX_ATTEMPTS = 12
+  CHECKIN_MAX_ATTEMPT_INTERVAL_HOURS = 8_760
+
+  RATE_LIMIT_MAGIC_LINK_PER_IP = 5
+  RATE_LIMIT_MAGIC_LINK_PERIOD = 300
+
+  ARGON2ID_OPS_LIMIT = 3
+  ARGON2ID_MEM_LIMIT = 268_435_456
+
+  INVITE_TOKEN_TTL_DAYS = 7
+
+  TRUSTED_CONTACT_DEFAULT_PAUSE_DURATION_HOURS = 360
+  TRUSTED_CONTACT_MIN_PAUSE_DURATION_HOURS = 24
+  TRUSTED_CONTACT_MAX_PAUSE_DURATION_HOURS = 8_760
+  TRUSTED_CONTACT_TOKEN_TTL_HOURS = 168
+
+  MESSAGE_RECIPIENT_MAX_DELIVERY_DELAY_DAYS = 365
+
+  CSP_REPORT_ONLY = false
+
   class << self
     # Application
     def app_base_url
@@ -41,7 +70,7 @@ module AppConfig
 
     # Authentication
     def magic_link_ttl_minutes
-      AppDefaults::MAGIC_LINK_TTL_MINUTES
+      MAGIC_LINK_TTL_MINUTES
     end
 
     def allowed_emails
@@ -63,59 +92,59 @@ module AppConfig
 
     # Check-in defaults
     def checkin_default_interval_hours
-      AppDefaults::CHECKIN_DEFAULT_INTERVAL_HOURS
+      CHECKIN_DEFAULT_INTERVAL_HOURS
     end
 
     def checkin_default_attempts
-      AppDefaults::CHECKIN_DEFAULT_ATTEMPTS
+      CHECKIN_DEFAULT_ATTEMPTS
     end
 
     def checkin_default_attempt_interval_hours
-      AppDefaults::CHECKIN_DEFAULT_ATTEMPT_INTERVAL_HOURS
+      CHECKIN_DEFAULT_ATTEMPT_INTERVAL_HOURS
     end
 
     # Check-in minimum bounds
     def checkin_min_interval_hours
-      AppDefaults::CHECKIN_MIN_INTERVAL_HOURS
+      CHECKIN_MIN_INTERVAL_HOURS
     end
 
     def checkin_min_attempts
-      AppDefaults::CHECKIN_MIN_ATTEMPTS
+      CHECKIN_MIN_ATTEMPTS
     end
 
     def checkin_min_attempt_interval_hours
-      AppDefaults::CHECKIN_MIN_ATTEMPT_INTERVAL_HOURS
+      CHECKIN_MIN_ATTEMPT_INTERVAL_HOURS
     end
 
     # Check-in maximum bounds
     def checkin_max_interval_hours
-      AppDefaults::CHECKIN_MAX_INTERVAL_HOURS
+      CHECKIN_MAX_INTERVAL_HOURS
     end
 
     def checkin_max_attempts
-      AppDefaults::CHECKIN_MAX_ATTEMPTS
+      CHECKIN_MAX_ATTEMPTS
     end
 
     def checkin_max_attempt_interval_hours
-      AppDefaults::CHECKIN_MAX_ATTEMPT_INTERVAL_HOURS
+      CHECKIN_MAX_ATTEMPT_INTERVAL_HOURS
     end
 
     # Rate limiting
     def rate_limit_magic_link_per_ip
-      AppDefaults::RATE_LIMIT_MAGIC_LINK_PER_IP
+      RATE_LIMIT_MAGIC_LINK_PER_IP
     end
 
     def rate_limit_magic_link_period
-      AppDefaults::RATE_LIMIT_MAGIC_LINK_PERIOD
+      RATE_LIMIT_MAGIC_LINK_PERIOD
     end
 
     # Crypto (Argon2id parameters for client-side JS)
     def argon2id_ops_limit
-      AppDefaults::ARGON2ID_OPS_LIMIT
+      ARGON2ID_OPS_LIMIT
     end
 
     def argon2id_mem_limit
-      AppDefaults::ARGON2ID_MEM_LIMIT
+      ARGON2ID_MEM_LIMIT
     end
 
     # Returns KDF params as a hash for JSON serialization
@@ -129,29 +158,29 @@ module AppConfig
 
     # Invite tokens
     def invite_token_ttl_days
-      AppDefaults::INVITE_TOKEN_TTL_DAYS
+      INVITE_TOKEN_TTL_DAYS
     end
 
     # Trusted contact
     def trusted_contact_default_pause_duration_hours
-      AppDefaults::TRUSTED_CONTACT_DEFAULT_PAUSE_DURATION_HOURS
+      TRUSTED_CONTACT_DEFAULT_PAUSE_DURATION_HOURS
     end
 
     def trusted_contact_min_pause_duration_hours
-      AppDefaults::TRUSTED_CONTACT_MIN_PAUSE_DURATION_HOURS
+      TRUSTED_CONTACT_MIN_PAUSE_DURATION_HOURS
     end
 
     def trusted_contact_max_pause_duration_hours
-      AppDefaults::TRUSTED_CONTACT_MAX_PAUSE_DURATION_HOURS
+      TRUSTED_CONTACT_MAX_PAUSE_DURATION_HOURS
     end
 
     def trusted_contact_token_ttl_hours
-      AppDefaults::TRUSTED_CONTACT_TOKEN_TTL_HOURS
+      TRUSTED_CONTACT_TOKEN_TTL_HOURS
     end
 
     # Message recipient delivery delay
     def message_recipient_max_delivery_delay_days
-      AppDefaults::MESSAGE_RECIPIENT_MAX_DELIVERY_DELAY_DAYS
+      MESSAGE_RECIPIENT_MAX_DELIVERY_DELAY_DAYS
     end
   end
 end
