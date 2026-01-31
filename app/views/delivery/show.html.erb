@@ -285,25 +285,31 @@
         
         if (msg.error) {
           messageEl.innerHTML = `
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-medium text-gray-900">${msg.label || 'Untitled Message'}</h3>
-              <span class="text-xs text-gray-500">${new Date(msg.created_at).toLocaleDateString()}</span>
-            </div>
             <div class="bg-red-50 border border-red-200 rounded p-3 text-sm text-red-700">
               ${msg.error}
             </div>
           `;
         } else {
           messageEl.innerHTML = `
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-medium text-gray-900">${msg.label || 'Untitled Message'}</h3>
-              <span class="text-xs text-gray-500">${new Date(msg.created_at).toLocaleDateString()}</span>
-            </div>
             <div class="prose prose-sm max-w-none">
               <pre class="whitespace-pre-wrap font-sans text-gray-700 bg-gray-50 rounded p-4">${escapeHtml(msg.plaintext)}</pre>
             </div>
           `;
         }
+
+        const header = document.createElement('div');
+        header.className = 'flex items-center justify-between mb-4';
+
+        const title = document.createElement('h3');
+        title.className = 'text-lg font-medium text-gray-900';
+        title.textContent = msg.label || 'Untitled Message';
+
+        const date = document.createElement('span');
+        date.className = 'text-xs text-gray-500';
+        date.textContent = new Date(msg.created_at).toLocaleDateString();
+
+        header.append(title, date);
+        messageEl.prepend(header);
         
         messagesList.appendChild(messageEl);
       }
