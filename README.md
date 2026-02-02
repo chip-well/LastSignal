@@ -20,6 +20,11 @@ Website: [lastsignal.app](https://lastsignal.app)
 - **Modern cryptography** - Argon2id (256MB) + XChaCha20-Poly1305 + X25519
 - **Auditable** - Audit the code yourself
 
+**⚠️ Critical: Strong Passphrases Required**
+
+LastSignal uses a **server-generated KDF salt** stored alongside recipient public keys. This is a deliberate architectural trade-off that enables deterministic key regeneration from passphrases, but it introduces a specific threat:
+**if an attacker gains access to the database** (via server compromise, data breach, malicious operator, or law enforcement request), they obtain the salt and can attempt **offline brute-force attacks** against recipient passphrases without any rate limiting.
+
 **[Full Security Documentation →](https://lastsignal.app/security)**
 
 ## ⏱️ Default Timing (Days)
