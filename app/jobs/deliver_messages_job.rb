@@ -21,6 +21,10 @@ class DeliverMessagesJob < ApplicationJob
 
       next if message_recipients.empty?
 
+      # Idempotency: skip if this recipient already has an active delivery token
+      # (prevents duplicate emails on job retry)
+      next if recipient.delivery_tokens.active.exists?
+
       available_count = message_recipients.count(&:available?)
       delayed_mrs = message_recipients.reject(&:available?)
 
