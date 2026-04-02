@@ -14,6 +14,24 @@ RSpec.describe "Accounts", type: :request do
       expect(response.headers["Cache-Control"]).to include("no-store")
       expect(response.headers["Pragma"]).to eq("no-cache")
     end
+
+    it "disables Turbo for one-time secret generation forms" do
+      user = create(:user)
+      sign_in_as(user)
+
+      get account_path
+
+      document = Nokogiri::HTML.parse(response.body)
+
+      generate_token_form = document.at_css("form[action='#{generate_external_checkin_token_account_path}']")
+      recovery_code_form = document.at_css("form[action='#{regenerate_recovery_code_account_path}']")
+
+      expect(generate_token_form).to be_present
+      expect(generate_token_form["data-turbo"]).to eq("false")
+
+      expect(recovery_code_form).to be_present
+      expect(recovery_code_form["data-turbo"]).to eq("false")
+    end
   end
 
   describe "POST /account/generate_external_checkin_token" do
