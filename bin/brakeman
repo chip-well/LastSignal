@@ -2,6 +2,7 @@
 require "rubygems"
 require "bundler/setup"
 
-ARGV.unshift("--ensure-latest")
+# Opt-in because some Brakeman releases can break this self-check transiently.
+ARGV.unshift("--ensure-latest") if ENV["BRAKEMAN_ENSURE_LATEST"] == "1"
 
 load Gem.bin_path("brakeman", "brakeman")
